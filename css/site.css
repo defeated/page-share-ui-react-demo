@@ -1,0 +1,11 @@
+.shareForm {
+  margin-bottom: 1em;
+}
+
+.shareResult {
+  border-top: 2px solid #ededed;
+}
+
+.shareResult dt {
+  font-weight: bold;
+}
