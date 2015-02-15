@@ -7,7 +7,7 @@ var ShareBox = React.createClass({
     var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
     var request = $.getJSON(endpoint)
       .fail(function(){
-        alert("Couldn't reach " + url)
+        alert("Sorry, couldn't reach " + url + " - please try again soon.")
       })
       .done(function(result){
         var results = [ result ].concat(this.state.data);
