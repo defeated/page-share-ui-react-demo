@@ -19,7 +19,7 @@ var ShareBox = React.createClass({
   render: function(){
     return (
       <div className="shareBox">
-        <h1>Shares</h1>
+        <h1>Metadata used in content sharing</h1>
         <ShareForm onShareSubmit={ this.handleShareSubmit } />
         <ShareList data={ this.state.data } />
       </div>
@@ -55,7 +55,7 @@ var ShareForm = React.createClass({
   render: function(){
     return (
       <form className="shareForm" onSubmit={ this.handleSubmit }>
-        <input type="text" ref="url" />
+        <input type="text" placeholder="Example: http://google.com" ref="url" />
         <button type="submit">&rarr;</button>
       </form>
     );
