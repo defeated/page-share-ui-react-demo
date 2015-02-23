@@ -7,12 +7,12 @@ breakable toy api on the backend: https://github.com/defeated/page-share
 
 ```html
 <ShareBox>
-  <ShareForm />
-  <ShareList>
-    <ShareResult />
-    <ShareResult />
+  <ShareBox.Form />
+  <ShareBox.List>
+    <ShareBox.Result />
+    <ShareBox.Result />
     ...
-  </ShareList>
+  </ShareBox.List>
 </ShareBox>
 ```
 

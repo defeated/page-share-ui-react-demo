@@ -20,18 +20,18 @@ var ShareBox = React.createClass({
     return (
       <div className="shareBox">
         <h1>Metadata used in content sharing</h1>
-        <ShareForm onShareSubmit={ this.handleShareSubmit } />
-        <ShareList data={ this.state.data } />
+        <ShareBox.Form onShareSubmit={ this.handleShareSubmit } />
+        <ShareBox.List data={ this.state.data } />
       </div>
     );
   }
 });
 
-var ShareList = React.createClass({
+ShareBox.List = React.createClass({
   render: function(){
     var shareNodes = this.props.data.map(function(shareResult){
       return (
-        <ShareResult key={ shareResult.source } { ...shareResult } />
+        <ShareBox.Result key={ shareResult.source } { ...shareResult } />
       );
     });
     return (
@@ -42,7 +42,7 @@ var ShareList = React.createClass({
   }
 });
 
-var ShareForm = React.createClass({
+ShareBox.Form = React.createClass({
   handleSubmit: function(e){
     e.preventDefault();
     var url = this.refs.url.getDOMNode().value.trim();
@@ -62,7 +62,7 @@ var ShareForm = React.createClass({
   }
 });
 
-var ShareResult = React.createClass({
+ShareBox.Result = React.createClass({
   render: function(){
     return (
       <div className="shareResult">
