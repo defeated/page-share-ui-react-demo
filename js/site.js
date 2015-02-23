@@ -2,6 +2,9 @@ var ShareBox = React.createClass({
   getInitialState: function(){
     return { data: [] };
   },
+  handleShareClear: function(){
+    this.replaceState(this.getInitialState());
+  },
   handleShareSubmit: function(url){
     var token = window.btoa(url);
     var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
@@ -20,22 +23,39 @@ var ShareBox = React.createClass({
     return (
       <div className="shareBox">
         <h1>Metadata used in content sharing</h1>
-        <ShareBox.Form onShareSubmit={ this.handleShareSubmit } />
-        <ShareBox.List data={ this.state.data } />
+        <ShareBox.Form
+          onShareSubmit={ this.handleShareSubmit }
+        />
+
+        <ShareBox.List
+          onShareClear={ this.handleShareClear }
+          data={ this.state.data }
+        />
       </div>
     );
   }
 });
 
 ShareBox.List = React.createClass({
+  handleClear: function(e){
+    e.preventDefault();
+    this.props.onShareClear();
+  },
   render: function(){
     var shareNodes = this.props.data.map(function(shareResult){
       return (
         <ShareBox.Result key={ shareResult.source } { ...shareResult } />
       );
     });
+    var clearButton;
+    if (shareNodes.length) {
+      clearButton = (
+        <button type="button" onClick={ this.handleClear }>Clear</button>
+      );
+    }
     return (
       <div className="shareList">
+        { clearButton }
         { shareNodes }
       </div>
     );
