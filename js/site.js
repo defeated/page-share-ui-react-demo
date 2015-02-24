@@ -22,6 +22,10 @@ var ShareBox = React.createClass({
     ShareStore.clear();
     this.replaceState(this.getInitialState());
   },
+  handleShareDelete: function(index){
+    ShareStore.deleteShare(index);
+    this.setState(ShareStore);
+  },
   handleShareSubmit: function(url){
     var token = window.btoa(url);
     var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
@@ -45,6 +49,7 @@ var ShareBox = React.createClass({
         />
         <ShareBox.List
           onShareClear={ this.handleShareClear }
+          onShareDelete={ this.handleShareDelete }
           data={ this.state.data }
         />
       </div>
@@ -57,12 +62,20 @@ ShareBox.List = React.createClass({
     e.preventDefault();
     this.props.onShareClear();
   },
+  handleDelete: function(index){
+    this.props.onShareDelete(index);
+  },
   render: function(){
-    var shareNodes = this.props.data.map(function(shareResult){
+    var shareNodes = this.props.data.map(function(shareResult, index){
       return (
-        <ShareBox.Result key={ shareResult.source } { ...shareResult } />
+        <ShareBox.Result
+          key={ index }
+          index={ index }
+          onDelete={ this.handleDelete }
+          { ...shareResult }
+        />
       );
-    });
+    }.bind(this));
     var clearButton;
     if (shareNodes.length) {
       clearButton = (
@@ -99,6 +112,10 @@ ShareBox.Form = React.createClass({
 });
 
 ShareBox.Result = React.createClass({
+  handleClickDelete: function(e){
+    e.preventDefault();
+    this.props.onDelete(this.props.index);
+  },
   render: function(){
     return (
       <div className="shareResult">
@@ -116,6 +133,8 @@ ShareBox.Result = React.createClass({
           <dt>Favicon</dt>
           <dd>{ this.props.favicon }</dd>
         </dl>
+
+        <button type="button" onClick={ this.handleClickDelete }>Delete</button>
       </div>
     );
   }
