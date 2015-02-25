@@ -60,19 +60,12 @@ var ShareBox = React.createClass({
 });
 
 ShareBox.List = React.createClass({
-  handleClear: function(e){
-    e.preventDefault();
-    this.props.onShareClear();
-  },
-  handleDelete: function(share){
-    this.props.onShareDelete(share);
-  },
   render: function(){
     var shareNodes = this.props.data.map(function(shareResult, index){
       return (
         <ShareBox.Result
           key={ index }
-          onDelete={ this.handleDelete.bind(null, shareResult) }
+          onDelete={ this.props.onShareDelete.bind(null, shareResult) }
           { ...shareResult }
         />
       );
@@ -80,7 +73,7 @@ ShareBox.List = React.createClass({
     var clearButton;
     if (shareNodes.length) {
       clearButton = (
-        <button type="button" onClick={ this.handleClear }>Clear</button>
+        <button type="button" onClick={ this.props.onShareClear }>Clear</button>
       );
     }
     return (
@@ -113,10 +106,6 @@ ShareBox.Form = React.createClass({
 });
 
 ShareBox.Result = React.createClass({
-  handleClickDelete: function(e){
-    e.preventDefault();
-    this.props.onDelete(this);
-  },
   render: function(){
     return (
       <div className="shareResult">
@@ -135,7 +124,7 @@ ShareBox.Result = React.createClass({
           <dd>{ this.props.favicon }</dd>
         </dl>
 
-        <button type="button" onClick={ this.handleClickDelete }>Delete</button>
+        <button type="button" onClick={ this.props.onDelete }>Delete</button>
       </div>
     );
   }
