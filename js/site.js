@@ -11,7 +11,8 @@ var ShareStore = {
     return this;
   },
 
-  deleteShare: function(index) {
+  deleteShare: function(share) {
+    var index = this.data.indexOf(share);
     this.data.splice(index, 1);
     return this;
   }
@@ -24,8 +25,8 @@ var ShareBox = React.createClass({
   handleShareClear: function(){
     this.setState(this.state.clear());
   },
-  handleShareDelete: function(index){
-    this.state.deleteShare(index);
+  handleShareDelete: function(share){
+    this.state.deleteShare(share);
     this.setState(this.state);
   },
   handleShareSubmit: function(url){
@@ -63,16 +64,15 @@ ShareBox.List = React.createClass({
     e.preventDefault();
     this.props.onShareClear();
   },
-  handleDelete: function(index){
-    this.props.onShareDelete(index);
+  handleDelete: function(share){
+    this.props.onShareDelete(share);
   },
   render: function(){
     var shareNodes = this.props.data.map(function(shareResult, index){
       return (
         <ShareBox.Result
           key={ index }
-          index={ index }
-          onDelete={ this.handleDelete }
+          onDelete={ this.handleDelete.bind(null, shareResult) }
           { ...shareResult }
         />
       );
@@ -115,7 +115,7 @@ ShareBox.Form = React.createClass({
 ShareBox.Result = React.createClass({
   handleClickDelete: function(e){
     e.preventDefault();
-    this.props.onDelete(this.props.index);
+    this.props.onDelete(this);
   },
   render: function(){
     return (
