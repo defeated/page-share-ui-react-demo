@@ -3,14 +3,17 @@ var ShareStore = {
 
   clear: function(){
     this.data = [];
+    return this;
   },
 
   addShare: function(share) {
     this.data.unshift(share);
+    return this;
   },
 
   deleteShare: function(index) {
     this.data.splice(index, 1);
+    return this;
   }
 };
 
@@ -19,12 +22,11 @@ var ShareBox = React.createClass({
     return ShareStore;
   },
   handleShareClear: function(){
-    ShareStore.clear();
-    this.replaceState(this.getInitialState());
+    this.setState(this.state.clear());
   },
   handleShareDelete: function(index){
-    ShareStore.deleteShare(index);
-    this.setState(ShareStore);
+    this.state.deleteShare(index);
+    this.setState(this.state);
   },
   handleShareSubmit: function(url){
     var token = window.btoa(url);
@@ -34,8 +36,7 @@ var ShareBox = React.createClass({
         alert("Sorry, couldn't reach " + url + " - please try again soon.")
       })
       .done(function(result){
-        ShareStore.addShare(result);
-        this.setState(ShareStore);
+        this.setState(this.state.addShare(result));
       }.bind(this));
 
     setTimeout(request.abort, 3000);
