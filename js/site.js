@@ -18,6 +18,20 @@ var ShareStore = {
   }
 };
 
+var Heyjax = {
+  fetch: function(url){
+    var token = window.btoa(url);
+    var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
+    var request = $.getJSON(endpoint)
+      .fail(function(){
+        alert("Sorry, couldn't reach " + url + " - please try again soon.")
+      });
+
+    setTimeout(request.abort, 3000);
+    return request;
+  }
+};
+
 var ShareBox = React.createClass({
   getInitialState: function(){
     return ShareStore;
@@ -26,21 +40,12 @@ var ShareBox = React.createClass({
     this.setState(this.state.clear());
   },
   handleShareDelete: function(share){
-    this.state.deleteShare(share);
-    this.setState(this.state);
+    this.setState(this.state.deleteShare(share));
   },
   handleShareSubmit: function(url){
-    var token = window.btoa(url);
-    var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
-    var request = $.getJSON(endpoint)
-      .fail(function(){
-        alert("Sorry, couldn't reach " + url + " - please try again soon.")
-      })
-      .done(function(result){
-        this.setState(this.state.addShare(result));
-      }.bind(this));
-
-    setTimeout(request.abort, 3000);
+    Heyjax.fetch(url).done(function(result){
+      this.setState(this.state.addShare(result));
+    }.bind(this));
   },
   render: function(){
     return (
