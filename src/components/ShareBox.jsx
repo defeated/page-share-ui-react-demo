@@ -15,7 +15,7 @@ var ShareBox = React.createClass({
       <div className="shareBox">
         <h1>Metadata used in content sharing</h1>
         <ShareBox.Form
-          onShareSubmit={ this.props.store.fetchShare }
+          onShareSubmit={ this.props.onSubmit }
         />
         <ShareBox.List
           onShareClear={ this.handleShareClear }

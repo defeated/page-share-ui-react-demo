@@ -18286,54 +18286,29 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":29}],148:[function(require,module,exports){
-var React     = require('react'),
-    ShareBox  = require('./components/ShareBox.jsx'),
-    App       = React.createFactory(ShareBox);
+var React       = require('react'),
+    ShareStore  = require('./stores/ShareStore.js'),
+    ShareBox    = require('./components/ShareBox.jsx'),
+    App         = React.createFactory(ShareBox);
 
-var render = function(){
-  React.render(App({ store: ShareStore }), document.body);
+var save = function(url){
+  ShareStore.fetchShare(url).done(function(result){
+    ShareStore.addShare(result);
+    render();
+  });
 };
 
-var ShareStore = {
-  data: [],
-
-  clear: function(){
-    this.data = [];
-    return this;
-  },
-
-  addShare: function(share) {
-    this.data.unshift(share);
-    return this;
-  },
-
-  deleteShare: function(share) {
-    var index = this.data.indexOf(share);
-    this.data.splice(index, 1);
-    return this;
-  },
-
-  fetchShare: function(url){
-    var token = window.btoa(url);
-    var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
-    var request = $.getJSON(endpoint)
-      .fail(function(){
-        alert("Sorry, couldn't reach " + url + " - please try again soon.")
-      })
-      .done(function(result){
-        ShareStore.addShare(result);
-        render();
-      });
-
-    setTimeout(request.abort, 3000);
-    return request;
-  }
+var render = function(){
+  React.render(
+    App({ store: ShareStore, onSubmit: save }),
+    document.body
+  );
 };
 
 render();
 
 
-},{"./components/ShareBox.jsx":149,"react":147}],149:[function(require,module,exports){
+},{"./components/ShareBox.jsx":149,"./stores/ShareStore.js":150,"react":147}],149:[function(require,module,exports){
 var React = require('react');
 
 var ShareBox = React.createClass({displayName: "ShareBox",
@@ -18351,7 +18326,7 @@ var ShareBox = React.createClass({displayName: "ShareBox",
       React.createElement("div", {className: "shareBox"}, 
         React.createElement("h1", null, "Metadata used in content sharing"), 
         React.createElement(ShareBox.Form, {
-          onShareSubmit:  this.props.store.fetchShare}
+          onShareSubmit:  this.props.onSubmit}
         ), 
         React.createElement(ShareBox.List, {
           onShareClear:  this.handleShareClear, 
@@ -18437,4 +18412,40 @@ ShareBox.Result = React.createClass({displayName: "Result",
 module.exports = ShareBox;
 
 
-},{"react":147}]},{},[148]);
+},{"react":147}],150:[function(require,module,exports){
+var ShareStore = {
+  data: [],
+
+  clear: function(){
+    this.data.length = 0;
+    return this;
+  },
+
+  addShare: function(share) {
+    this.data.unshift(share);
+    return this;
+  },
+
+  deleteShare: function(share) {
+    var index = this.data.indexOf(share);
+    this.data.splice(index, 1);
+    return this;
+  },
+
+  fetchShare: function(url){
+    var token = window.btoa(url);
+    var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
+    var request = $.getJSON(endpoint)
+      .fail(function(){
+        alert("Sorry, couldn't reach " + url + " - please try again soon.")
+      });
+
+    setTimeout(request.abort, 3000);
+    return request;
+  }
+};
+
+module.exports = ShareStore;
+
+
+},{}]},{},[148]);
