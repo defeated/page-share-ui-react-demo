@@ -3,6 +3,12 @@
 This is more or less the tutorial from react docs, but using my own
 breakable toy api on the backend: https://github.com/defeated/page-share
 
+## setup
+
+  1. `npm install`
+  2. `npm run build`
+  3. `open dist/index.html`
+
 ## components
 
 ```html
