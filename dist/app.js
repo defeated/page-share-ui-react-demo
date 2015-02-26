@@ -18286,6 +18286,53 @@ module.exports = warning;
 module.exports = require('./lib/React');
 
 },{"./lib/React":29}],148:[function(require,module,exports){
+var React     = require('react'),
+    ShareBox  = require('./components/ShareBox.jsx');
+
+var ShareStore = {
+  data: [],
+
+  clear: function(){
+    this.data = [];
+    return this;
+  },
+
+  addShare: function(share) {
+    this.data.unshift(share);
+    return this;
+  },
+
+  deleteShare: function(share) {
+    var index = this.data.indexOf(share);
+    this.data.splice(index, 1);
+    return this;
+  }
+};
+
+var Heyjax = {
+  fetch: function(url){
+    var token = window.btoa(url);
+    var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
+    var request = $.getJSON(endpoint)
+      .fail(function(){
+        alert("Sorry, couldn't reach " + url + " - please try again soon.")
+      });
+
+    setTimeout(request.abort, 3000);
+    return request;
+  }
+};
+
+React.render(
+  React.createElement(ShareBox, {
+    store: ShareStore, 
+    ajax: Heyjax }
+  ),
+  document.getElementById('wrapper')
+);
+
+
+},{"./components/ShareBox.jsx":149,"react":147}],149:[function(require,module,exports){
 var React = require('react');
 
 var ShareBox = React.createClass({displayName: "ShareBox",
@@ -18394,51 +18441,4 @@ ShareBox.Result = React.createClass({displayName: "Result",
 module.exports = ShareBox;
 
 
-},{"react":147}],149:[function(require,module,exports){
-var React     = require('react'),
-    ShareBox  = require('./components/ShareBox.jsx');
-
-var ShareStore = {
-  data: [],
-
-  clear: function(){
-    this.data = [];
-    return this;
-  },
-
-  addShare: function(share) {
-    this.data.unshift(share);
-    return this;
-  },
-
-  deleteShare: function(share) {
-    var index = this.data.indexOf(share);
-    this.data.splice(index, 1);
-    return this;
-  }
-};
-
-var Heyjax = {
-  fetch: function(url){
-    var token = window.btoa(url);
-    var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
-    var request = $.getJSON(endpoint)
-      .fail(function(){
-        alert("Sorry, couldn't reach " + url + " - please try again soon.")
-      });
-
-    setTimeout(request.abort, 3000);
-    return request;
-  }
-};
-
-React.render(
-  React.createElement(ShareBox, {
-    store: ShareStore, 
-    ajax: Heyjax }
-  ),
-  document.getElementById('wrapper')
-);
-
-
-},{"./components/ShareBox.jsx":148,"react":147}]},{},[149]);
+},{"react":147}]},{},[148]);

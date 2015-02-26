@@ -3,9 +3,12 @@
     "browserify": "^9.0.3",
     "react": "^0.12.2",
     "react-tools": "^0.12.2",
-    "reactify": "^1.0.0"
+    "reactify": "^1.0.0",
+    "uglify-js": "^2.4.16"
   },
   "scripts": {
-    "build": "browserify -t reactify src/site.js -o dist/site.js"
+    "build:jsx":  "browserify -t reactify src/app.js -o dist/app.js",
+    "build:js":   "uglifyjs dist/app.js --mangle --compress -o dist/app.min.js",
+    "build":      "npm run build:jsx && npm run build:js"
   }
 }
