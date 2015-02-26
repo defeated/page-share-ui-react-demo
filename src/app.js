@@ -1,5 +1,10 @@
 var React     = require('react'),
-    ShareBox  = require('./components/ShareBox.jsx');
+    ShareBox  = require('./components/ShareBox.jsx'),
+    App       = React.createFactory(ShareBox);
+
+var render = function(){
+  React.render(App({ store: ShareStore }), document.body);
+};
 
 var ShareStore = {
   data: [],
@@ -18,16 +23,18 @@ var ShareStore = {
     var index = this.data.indexOf(share);
     this.data.splice(index, 1);
     return this;
-  }
-};
+  },
 
-var Heyjax = {
-  fetch: function(url){
+  fetchShare: function(url){
     var token = window.btoa(url);
     var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
     var request = $.getJSON(endpoint)
       .fail(function(){
         alert("Sorry, couldn't reach " + url + " - please try again soon.")
+      })
+      .done(function(result){
+        ShareStore.addShare(result);
+        render();
       });
 
     setTimeout(request.abort, 3000);
@@ -35,10 +42,4 @@ var Heyjax = {
   }
 };
 
-React.render(
-  <ShareBox
-    store={ ShareStore }
-    ajax={ Heyjax }
-  />,
-  document.getElementById('wrapper')
-);
+render();

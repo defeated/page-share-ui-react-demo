@@ -10,17 +10,12 @@ var ShareBox = React.createClass({
   handleShareDelete: function(share){
     this.setState(this.state.deleteShare(share));
   },
-  handleShareSubmit: function(url){
-    this.props.ajax.fetch(url).done(function(result){
-      this.setState(this.state.addShare(result));
-    }.bind(this));
-  },
   render: function(){
     return (
       <div className="shareBox">
         <h1>Metadata used in content sharing</h1>
         <ShareBox.Form
-          onShareSubmit={ this.handleShareSubmit }
+          onShareSubmit={ this.props.store.fetchShare }
         />
         <ShareBox.List
           onShareClear={ this.handleShareClear }

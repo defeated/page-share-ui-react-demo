@@ -18287,7 +18287,12 @@ module.exports = require('./lib/React');
 
 },{"./lib/React":29}],148:[function(require,module,exports){
 var React     = require('react'),
-    ShareBox  = require('./components/ShareBox.jsx');
+    ShareBox  = require('./components/ShareBox.jsx'),
+    App       = React.createFactory(ShareBox);
+
+var render = function(){
+  React.render(App({ store: ShareStore }), document.body);
+};
 
 var ShareStore = {
   data: [],
@@ -18306,16 +18311,18 @@ var ShareStore = {
     var index = this.data.indexOf(share);
     this.data.splice(index, 1);
     return this;
-  }
-};
+  },
 
-var Heyjax = {
-  fetch: function(url){
+  fetchShare: function(url){
     var token = window.btoa(url);
     var endpoint = 'https://page-share.herokuapp.com/' + token + '?callback=?';
     var request = $.getJSON(endpoint)
       .fail(function(){
         alert("Sorry, couldn't reach " + url + " - please try again soon.")
+      })
+      .done(function(result){
+        ShareStore.addShare(result);
+        render();
       });
 
     setTimeout(request.abort, 3000);
@@ -18323,13 +18330,7 @@ var Heyjax = {
   }
 };
 
-React.render(
-  React.createElement(ShareBox, {
-    store: ShareStore, 
-    ajax: Heyjax }
-  ),
-  document.getElementById('wrapper')
-);
+render();
 
 
 },{"./components/ShareBox.jsx":149,"react":147}],149:[function(require,module,exports){
@@ -18345,17 +18346,12 @@ var ShareBox = React.createClass({displayName: "ShareBox",
   handleShareDelete: function(share){
     this.setState(this.state.deleteShare(share));
   },
-  handleShareSubmit: function(url){
-    this.props.ajax.fetch(url).done(function(result){
-      this.setState(this.state.addShare(result));
-    }.bind(this));
-  },
   render: function(){
     return (
       React.createElement("div", {className: "shareBox"}, 
         React.createElement("h1", null, "Metadata used in content sharing"), 
         React.createElement(ShareBox.Form, {
-          onShareSubmit:  this.handleShareSubmit}
+          onShareSubmit:  this.props.store.fetchShare}
         ), 
         React.createElement(ShareBox.List, {
           onShareClear:  this.handleShareClear, 
