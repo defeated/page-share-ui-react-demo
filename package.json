@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build:jsx":  "browserify -t reactify src/app.js -o dist/app.js",
-    "build:js":   "uglifyjs dist/app.js --mangle --compress -o dist/app.min.js",
+    "build:js":   "uglifyjs dist/app.js -mc warnings=false -o dist/app.min.js",
     "build":      "npm run build:jsx && npm run build:js"
   }
 }
