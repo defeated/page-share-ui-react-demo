@@ -1,14 +1,11 @@
 {
   "devDependencies": {
-    "browserify": "^9.0.3",
+    "jsx-loader": "^0.12.2",
     "react": "^0.12.2",
     "react-tools": "^0.12.2",
-    "reactify": "^1.0.0",
-    "uglify-js": "^2.4.16"
+    "webpack": "^1.6.0"
   },
   "scripts": {
-    "build:jsx":  "browserify -t reactify src/app.js -o dist/app.js",
-    "build:js":   "uglifyjs dist/app.js -mc warnings=false -o dist/app.min.js",
-    "build":      "npm run build:jsx && npm run build:js"
+    "build": "webpack src/app.js dist/app.min.js -pc --module-bind jsx --progress"
   }
 }
